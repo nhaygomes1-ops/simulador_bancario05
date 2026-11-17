@@ -1,0 +1,119 @@
+
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert
+} from 'react-native';
+
+export default function App() {
+  const [saldo, setSaldo] = useState(1000);
+  const [valor, setValor] = useState('');
+
+  function depositar() {
+    const quantia = Number(valor);
+
+    if (!valor.trim() || !Number.isFinite(quantia) || quantia <= 0) {
+      Alert.alert('Atenção', 'Digite um valor positivo.');
+      return;
+    }
+
+    setSaldo(saldo + quantia);
+    setValor('');
+    Alert.alert('Sucesso', 'Depósito realizado!');
+  }
+
+  function sacar() {
+    const quantia = Number(valor);
+
+    if (!valor.trim() || !Number.isFinite(quantia) || quantia <= 0) {
+      Alert.alert('Atenção', 'Digite um valor positivo.');
+      return;
+    }
+
+    if (quantia > saldo) {
+      Alert.alert('Saldo insuficiente', 'Você não possui esse valor.');
+      return;
+    }
+
+    setSaldo(saldo - quantia);
+    setValor('');
+    Alert.alert('Sucesso', 'Saque realizado!');
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.titulo}>Simulador Bancário</Text>
+
+      <Text style={styles.subtitulo}>Meu saldo</Text>
+
+      <Text style={styles.saldo}>
+        R$ {saldo.toFixed(2).replace('.', ',')}
+      </Text>
+
+      <Text style={styles.label}>Digite o valor:</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Ex: 200"
+        keyboardType="decimal-pad"
+        value={valor}
+        onChangeText={setValor}
+      />
+
+      <View style={styles.botao}>
+        <Button title="Depositar" onPress={depositar} color="green" />
+      </View>
+
+      <View style={styles.botao}>
+        <Button title="Sacar" onPress={sacar} color="#d62828" />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f1f5f9',
+    justifyContent: 'center',
+    padding: 25
+  },
+  titulo: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#17324d'
+  },
+  subtitulo: {
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  saldo: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: 'green',
+    textAlign: 'center',
+    marginVertical: 20
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8
+  },
+  input: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 18,
+    marginBottom: 20
+  },
+  botao: {
+    marginBottom: 15
+  }
+});
